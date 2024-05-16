@@ -28,15 +28,6 @@ public class Minesweeper
         fhrBoard = new String[row][col];
     }
 
-    public Minesweeper(int width, int height, int mineN){
-        row = height;
-        col = width;
-        this.mineN = mineN;
-        mines = new Boolean[row][col];
-        numBoard = new int[row][col];
-        fhrBoard = new String[row][col];
-    }
-
     public int getRow(){
         return row;
     }
@@ -189,18 +180,31 @@ public class Minesweeper
 
     public String toString(){
         String board = "";
-        board += "  ";
+
+        board += "   ";
         for(int c=0; c<col; c++){
-            board += "  " + (c+1) + " ";
+            if(c + 1 > 9){
+                board += "  " + (c+1);
+            }
+            else{
+                board += "  " + (c+1) + " ";
+            }
         }
         board += "\n";
+
         for(int r=0; r<row; r++){
-            board += "  ";
+            board += "   ";
             for(int c=0; c<col; c++){
                 board += "+---";
             }
             board += "+\n";
-            board += (r+1) + " ";
+
+            if(r + 1 > 9){
+                board += (r+1) + " ";
+            }
+            else{
+                board += " " + (r+1) + " ";
+            }
             for(int c=0; c<col; c++){
                 if(fhrBoard[r][c].equals("R")){
                     if(numBoard[r][c] == 0){
@@ -224,11 +228,13 @@ public class Minesweeper
             }
             board += "|\n";
         }
-        board += "  ";
+
+        board += "   ";
         for(int c=0; c<col; c++){
             board += "+---";
         }
         board += "+\n";
+
         return board;
     }
 }

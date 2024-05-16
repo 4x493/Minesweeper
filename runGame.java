@@ -10,31 +10,11 @@ public class runGame
         System.out.println("[1] Beginner");
         System.out.println("[2] Intermediate");
         System.out.println("[3] Expert");
-        System.out.println("[4] Custom");
         System.out.println("Input the difficulty number you desire.");
 
-        int difficulty = input.nextInt();
-        input.nextLine();
+        int difficulty = Integer.parseInt(input.next());
 
-        Minesweeper game;
-
-        /*
-        if(1 <= difficulty && difficulty <= 3){
-            game = new Minesweeper(difficulty);
-        }
-        else if(difficulty == 4){
-            System.out.println("Input the board dimensions you desire in the form of [width]x[height] without the brakets.");
-            String dims = input.nextLine();
-            int col = input.nextInt();
-            int row = input.nextInt();
-
-            System.out.println("Input the total number of mines you want in your board.");
-            int mineN = input.nextInt();
-            game = new Minesweeper(row, col, mineN);
-        }
-        */
-
-        game = new Minesweeper(difficulty);
+        Minesweeper game = new Minesweeper(difficulty);
 
         game.generateMines();
         game.generateNumBoard();
