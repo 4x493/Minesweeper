@@ -229,7 +229,6 @@ public class runGame
             System.out.println("[3] End the game. Input: 3");
             String command = input.nextLine();
             if(command == "3"){
-                System.out.println("Game Ended");
                 break;
             }
             String action = command.substring(0, 1);
@@ -244,5 +243,6 @@ public class runGame
             }
             System.out.println(game);
         }
+        System.out.println("Game Over");
     }
 }
