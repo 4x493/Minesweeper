@@ -157,11 +157,18 @@ public class Minesweeper
 
     public String toString(){
         Strinng board;
+        board += "  ";
+        for(int c=0; c<col; c++){
+            board += "  " + c + " ";
+        }
+        board += "\n";
         for(int r=0; r<row; r++){
+            board += "  ";
             for(int c=0; c<col; c++){
                 board += "+---"
             }
             board += "+\n";
+            board += r + " ";
             for(int c=0; c<col; c++){
                 if(fhrBoard[r][c] == "R"){
                     if(numBoard[r][c] == 0){
@@ -179,6 +186,7 @@ public class Minesweeper
                 }
             }
             board += "|\n";
+            Board += "  ";
             for(int c=0; c<col; c++){
                 board += "+---"
             }
