@@ -3,7 +3,6 @@ public class Minesweeper
     private int row;
     private int col;
     private int mineN;
-    private int difficulty;
     private Boolean[][] mines;
     private int[][] numBoard;
     private String[][] fhrBoard;
@@ -38,13 +37,26 @@ public class Minesweeper
         fhrBoard = new String[row][col];
     }
 
+    public int getRow(){
+        return row;
+    }
+
+    public int getCol(){
+        return col;
+    }
+
     public void generateMines(){
+        for(int i=0; i<row; i++){
+            for(int j=0; j<col; j++){
+                mines[i][j] = false;
+            }
+        }
         for(int i=0; i<mineN; i++){
-            int row = Math.random() * this.row + 1;
-            int col = Math.random() * this.col + 1;
+            int row = (int)(Math.random() * this.row);
+            int col = (int)(Math.random() * this.col);
             while(mines[row][col]){
-                row = Math.random() * this.row + 1;
-                col = Math.random() * this.col + 1;
+                row = (int)(Math.random() * this.row);
+                col = (int)(Math.random() * this.col);
             }
             mines[row][col] = true;
         }
@@ -67,23 +79,23 @@ public class Minesweeper
     }
 
     public void generatefhrBoard(){
-        for(String[] r : fhrBoard){
-            for(String fhr : r){
-                fhr = "H";
+        for(int i=0; i<row; i++){
+            for(int j=0; j<col; j++){
+                fhrBoard[i][j] = "H";
             }
         }
     }
 
     public void revealCell(int r, int c){
-        if(fhrBoard[r][c] == "H"){
+        if(fhrBoard[r][c].equals("H")){
             fhrBoard[r][c] = "R";
         }
-        else if(fhrBoard[r][c] == "R" && numBoard[r][c] != 0){
-            int flagCount;
+        else if(fhrBoard[r][c].equals("R") && numBoard[r][c] != 0){
+            int flagCount = 0;
             for(int rs=r-1; rs<=r+1; rs++){
                 for(int cs=c-1; cs<=c+1; cs++){
                     if(0 <= rs && rs < row && 0 <= cs && cs < col){
-                        if(fhrBoard[rs][cs] == "F"){
+                        if(fhrBoard[rs][cs].equals("F")){
                             flagCount += 1;
                         }
                     }
@@ -93,7 +105,9 @@ public class Minesweeper
                 for(int rs=r-1; rs<=r+1; rs++){
                     for(int cs=c-1; cs<=c+1; cs++){
                         if(0 <= rs && rs < row && 0 <= cs && cs < col){
-                            fhrBoard[rs][cs] = "R";
+                            if(!fhrBoard[rs][cs].equals("F")){
+                                fhrBoard[rs][cs] = "R";
+                            }
                         }
                     }
                 }
@@ -104,11 +118,11 @@ public class Minesweeper
     public Boolean checkChunkReveal(){
         for(int r=0; r<row; r++){
             for(int c=0; c<col; c++){
-                if(fhrBoard[r][c] == "R" && numBoard[r][c] == 0){
+                if(fhrBoard[r][c].equals("R") && numBoard[r][c] == 0){
                     for(int rs=r-1; rs<=r+1; rs++){
                         for(int cs=c-1; cs<=c+1; cs++){
                             if(0 <= rs && rs < row && 0 <= cs && cs < col){
-                                if(fhrBoard[rs][cs] == "H"){
+                                if(fhrBoard[rs][cs].equals("H")){
                                     return true;
                                 }
                             }
@@ -124,7 +138,7 @@ public class Minesweeper
         while(checkChunkReveal()){
             for(int r=0; r<row; r++){
                 for(int c=0; c<col; c++){
-                    if(fhrBoard[r][c] == "R" && numBoard[r][c] == 0){
+                    if(fhrBoard[r][c].equals("R") && numBoard[r][c] == 0){
                         for(int rs=r-1; rs<=r+1; rs++){
                             for(int cs=c-1; cs<=c+1; cs++){
                                 if(0 <= rs && rs < row && 0 <= cs && cs < col){
@@ -139,7 +153,7 @@ public class Minesweeper
     }
 
     public void flagCell(int r, int c){
-        if(fhrBoard[r][c] == "H"){
+        if(fhrBoard[r][c].equals("H")){
             fhrBoard[r][c] = "F";
         }
     }
@@ -147,7 +161,7 @@ public class Minesweeper
     public Boolean checkGameOver(){
         for(int r=0; r<row; r++){
             for(int c=0; c<col; c++){
-                if(fhrBoard[r][c] == "R" && mines[r][c]){
+                if(fhrBoard[r][c].equals("R") && mines[r][c]){
                     return true;
                 }
             }
@@ -155,102 +169,66 @@ public class Minesweeper
         return false;
     }
 
+    public Boolean checkGameClear(){
+        int flagCount = 0;
+        for(int r=0; r<row; r++){
+            for(int c=0; c<col; c++){
+                if(fhrBoard[r][c].equals("H")){
+                    return false;
+                }
+                else if(fhrBoard[r][c].equals("F")){
+                    flagCount += 1;
+                }
+            }
+        }
+        if(flagCount != mineN){
+            return false;
+        }
+        return true;
+    }
+
     public String toString(){
-        Strinng board;
+        String board = "";
         board += "  ";
         for(int c=0; c<col; c++){
-            board += "  " + c + " ";
+            board += "  " + (c+1) + " ";
         }
         board += "\n";
         for(int r=0; r<row; r++){
             board += "  ";
             for(int c=0; c<col; c++){
-                board += "+---"
+                board += "+---";
             }
             board += "+\n";
-            board += r + " ";
+            board += (r+1) + " ";
             for(int c=0; c<col; c++){
-                if(fhrBoard[r][c] == "R"){
+                if(fhrBoard[r][c].equals("R")){
                     if(numBoard[r][c] == 0){
                         board += "|   ";
                     }
                     else{
-                        board += "| " + numBoard[r][c] + " ";
+                        if(mines[r][c]){
+                            board += "| B ";
+                        }
+                        else{
+                            board += "| " + numBoard[r][c] + " ";
+                        }
                     }
                 }
-                else if(fhrBoard[r][c] == "H"){
-                    board += "| : ";
+                else if(fhrBoard[r][c].equals("H")){
+                    board += "| . ";
                 }
                 else{
                     board += "| F ";
                 }
             }
             board += "|\n";
-            Board += "  ";
-            for(int c=0; c<col; c++){
-                board += "+---"
-            }
-            board += "+\n";
         }
-    }
-}
-
-public class runGame
-{
-    public static void main(String[] args)
-    {
-        Scanner input = new Scanner(System.in);
-
-        System.out.println("Select a difficulty level:");
-        System.out.println("[1] Beginner");
-        System.out.println("[2] Intermediate");
-        System.out.println("[3] Expert");
-        System.out.println("[4] Custom");
-        System.out.println("Input the difficulty number you desire.");
-
-        int difficulty = input.nextInt();
-        Minesweeper game;
-
-        if(1 <= difficulty && difficulty <= 3){
-            game = new Minesweeper(difficulty);
+        board += "  ";
+        for(int c=0; c<col; c++){
+            board += "+---";
         }
-        else if(difficulty == 4){
-            System.out.println("Input the board dimensions you desire in the form of [width]x[height] without the brakets.");
-            String dims = input.nextLine();
-            int col = (int)(dims.substring(0, dims.indexOf("x")));
-            int row = (int)(dims.substring(dims.indexOf("x") + 1));
-
-            System.out.println("Input the total number of mines you want in your board.");
-            int mineN = input.nextInt();
-            game = new Minesweeper(row, col, mineN);
-        }
-
-        game.generateMines();
-        game.generateNumBoard();
-        game.generatefhrBoard();
-
-        while(game.checkGameOver == false){
-            System.out.println(game);
-            System.out.println("Set of actions you can do:");
-            System.out.println("[1] Reveal a cell. Input: R, x, y");
-            System.out.println("[2] Flag a cell. Input: F, x, y");
-            System.out.println("[3] End the game. Input: 3");
-            String command = input.nextLine();
-            if(command == "3"){
-                break;
-            }
-            String action = command.substring(0, 1);
-            int row = command.substring(command.indexOf(",", command.indexOf(",") + 1) + 1);
-            int col = command.substring(command.indexOf(",") + 1, command.indexOf(",", command.indexOf(",") + 1));
-            if(action == "R"){
-                game.revealCell(row, col);
-                game.revealChunk();
-            }
-            else if(action == "F"){
-                game.flagCell(row, col);
-            }
-            System.out.println(game);
-        }
-        System.out.println("Game Over");
+        board += "+\n";
+        return board;
     }
 }
